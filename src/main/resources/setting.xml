@@ -1,18 +1,70 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/util
+    http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+<!--    annotation-config : annotation을 심어뒀으니 확인을 해보라는 명령-->
+    <context:annotation-config/>
 <!--    Exam exam = new NewlecExam();-->
 <!--    헷갈리지 않도록 패키지 명까지 함께 써준다.-->
-    <bean id="exam" class="spring.di.entity.NewlecExam"/>
+<!--    (namespace)p:kor => p:를 쓰지 않으면 kor가 bean이 가지는 속성으로 인식. & 상단에 xmlns:p 처리기가 담당하는 속성이라고 말해줌 -->
+    <bean id="exam" class="spring.di.entity.NewlecExam" p:kor="10" p:eng="10" p:com="20" p:math="40"/>
+    <!--<bean id="exam" class="spring.di.entity.NewlecExam">-->
+<!--        kor 이라는 멤버변수에 값을 세팅하기 위해서는 setter가 필요하다.-->
+<!--        <property name="kor" value="90"/>-->
+<!--        1. name으로 접근-->
+        <!--<property name="kor">
+            <value>86</value>
+        </property>
+        <property name="eng" value="80"/>
+        <property name="math" value="70"/>
+        <property name="com" value="10"/>-->
+
+<!--        2. index로 접근-->
+        <!--<constructor-arg index="0" value="10"/>
+        <constructor-arg index="1" value="20"/>
+        <constructor-arg index="3" value="30"/>
+        <constructor-arg index="2" value="40"/>-->
+
+<!--        3. -->
+        <!--<constructor-arg name="eng" type="int" value="20"/>
+        <constructor-arg name="com" type="int" value="10"/>
+        <constructor-arg name="kor" type="int" value="30"/>
+        <constructor-arg name="math" type="int" value="40"/>
+    </bean>-->
 <!--    ExamConsole console = new GridExamConsole();-->
     <bean id="console" class="spring.di.ui.InlineExamConsole">
 <!--        name은 setter를  호출하는 역할. exam이 들어가지만 setExam을 호출하기 위한 함수
             setter를 무조건 가지고 있어야 함
             ref : setExam에 들어갈 매개변수. 해당 변수의 타입이 value형이면 value 속성, reference형이면 ref 속성에 넣는다.          -->
 <!--        console.setExam(exam);-->
-        <property name="exam" ref="exam"/>
+<!--        <property name="exam" ref="exam"/>-->
     </bean>
 
+<!--    아래와 차이점 : 객체를 만들 수 있는 능력이 있다.-->
+    <util:list id="exams" list-class="java.util.ArrayList">
+        <!--                1. 직접 생성-->
+        <bean  class="spring.di.entity.NewlecExam" p:kor="10" p:eng="10" p:com="20" p:math="40"/>
+        <!--                2. 위에 있는 객체 참조-->
+        <ref bean="exam"/>
+    </util:list>
+
+<!--&lt;!&ndash;객체를 만들 수 있는 능력이 없다.&ndash;&gt;-->
+<!--    <bean id="exams" class="java.util.ArrayList">-->
+<!--        <constructor-arg>-->
+<!--            <list>-->
+<!--&lt;!&ndash;                1. 직접 생성&ndash;&gt;-->
+<!--                <bean  class="spring.di.entity.NewlecExam" p:kor="10" p:eng="10" p:com="20" p:math="40"/>-->
+<!--&lt;!&ndash;                2. 위에 있는 객체 참조&ndash;&gt;-->
+<!--                <ref bean="exam"/>-->
+<!--            </list>-->
+<!--        </constructor-arg>-->
+<!--    </bean>-->
 
 </beans>
